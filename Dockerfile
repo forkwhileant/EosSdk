@@ -8,7 +8,7 @@
 # EOS libraries).
 #
 # 1) Build Docker image (we will call it 'arista-eossdk')
-#  docker build . -f <this Dockerfile> -t arista-eossdk
+#  docker build . -f Dockerfile -t arista-eossdk
 #
 # 2) Create container: (assuming application code to be compiled is at /code on the
 #    host machine that starts the container)
@@ -40,6 +40,7 @@ ARG version=2.23.2
 # Set eossdk version as label and environ variable.
 LABEL version=$version
 ENV EOS_SDK_VERSION=$version
+ENV PATH="/usr/local/go/bin:${PATH}"
 
 # Install necessary utilities.
 RUN \
@@ -55,7 +56,7 @@ RUN \
 
 # Download cross-compiler.
 RUN wget -O /tmp/arista-cross-compiler.rpm \
-       https://github.com/aristanetworks/EosSdk-cross-compiler/releases/download/v4.32.0/arista-gcc-11.i686.rpm
+       https://github.com/aristanetworks/EosSdk-cross-compiler/releases/download/v4.32.0/arista-gcc11.i686.rpm
 
 # Install the cross compiler.
 RUN rpm --force --nodeps -Uvh /tmp/arista-cross-compiler.rpm
@@ -80,3 +81,12 @@ RUN cd /tmp; tar -xzf stubs.tar.gz; cd EosSdk-* ;\
     cd ..                                       ;\
     rm -rf /tmp/EosSdk-*                        ;\
     rm stubs.tar.gz
+
+# install golang
+RUN cd /tmp; wget https://go.dev/dl/go1.24.3.linux-amd64.tar.gz; tar -C /usr/local -xzf go1.24.3.linux-amd64.tar.gz; rm go1.24.3.linux-amd64.tar.gz
+
+# add to path
+RUN echo "export PATH=$PATH:/usr/local/go/bin" >> /root/.bashrc
+
+# enable CRB repo and install swig
+RUN dnf install -y epel-release && dnf config-manager --set-enabled crb && dnf install -y swig
