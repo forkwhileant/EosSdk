@@ -109,6 +109,13 @@ if $build_go; then
       ln -s "$STUBS_DIR/eos" "$GO_SRCDIR/"
    fi
    
+   # Create go.mod file for the eossdk module
+   cat > "$GO_SRCDIR/go.mod" << EOF
+module eossdk
+
+go 1.11
+EOF
+   
    echo "Go bindings generated in $GO_SRCDIR"
    echo "To use the bindings:"
    echo "  - Set GOPATH to include $STUBS_DIR/go"

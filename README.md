@@ -88,7 +88,12 @@ func main() {
 
 To build your Go application:
 
+#### Option 1: Using GOPATH (Go 1.10 and earlier style)
+
 ```bash
+# Disable Go modules
+export GO111MODULE=off
+
 # Set environment variables
 export GOPATH=/path/to/EosSdk/go
 export CGO_CFLAGS="-I/path/to/EosSdk"
@@ -100,6 +105,29 @@ export GOARCH=386
 # Build your application
 go build your_app.go
 ```
+
+#### Option 2: Using Go Modules (Go 1.11+ style)
+
+If your application uses Go modules, you need to add a `replace` directive to your `go.mod` file:
+
+```bash
+# In your application directory, edit go.mod to add:
+replace eossdk => /path/to/EosSdk/go/src/eossdk
+
+# Then set the CGO environment variables:
+export CGO_CFLAGS="-I/path/to/EosSdk"
+export CGO_LDFLAGS="-L/path/to/EosSdk/.libs -leos"
+
+# For 32-bit builds, also set:
+export GOARCH=386
+export CGO_CFLAGS="-I/path/to/EosSdk -m32"
+export CGO_LDFLAGS="-L/path/to/EosSdk/.libs -leos -m32"
+
+# Build your application
+go build
+```
+
+**Note:** If the EOS SDK library was built in 32-bit mode (default), you must use `GOARCH=386` and add `-m32` to the CGO flags when building your Go application.
 
 ### Running Go Applications
 
