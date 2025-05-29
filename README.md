@@ -60,11 +60,11 @@ The EOS SDK supports Go language bindings through SWIG (Simplified Wrapper and I
 To generate Go bindings, use the `--go` flag with the build script:
 
 ```bash
-# For 64-bit bindings (default)
+# For 32-bit bindings (default)
 ./build.sh --go
 
-# For 32-bit bindings
-./build.sh -m32 --go
+# For 64-bit bindings
+./build.sh -m64 --go
 ```
 
 This will:
