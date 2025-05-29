@@ -1,0 +1,48 @@
+# Build artifacts
+*.o
+*.lo
+*.la
+.libs/
+.deps/
+
+# Autotools generated files
+Makefile
+Makefile.in
+/aclocal.m4
+/autom4te.cache/
+/autogen/
+/compile
+/config.*
+/configure
+/depcomp
+/install-sh
+/libtool
+/ltmain.sh
+/missing
+/stamp-h1
+
+# Generated source files
+*_gen.cpp
+*_gen.h
+eossdk_wrap.cpp
+eossdk_wrap.h
+eossdk.py
+_eossdk.so
+
+# Go bindings
+/go/
+eossdkgo_wrap.cpp
+eossdkgo_wrap.h
+eossdk.go
+
+# Python
+*.pyc
+__pycache__/
+
+# Editor files
+*.swp
+*~
+.vscode/
+
+# OS files
+.DS_Store
