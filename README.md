@@ -44,4 +44,74 @@ For a variety of `C++` and `Python` examples, see the `examples/`
 directory. The stub `.cpp` files at the top level directory can be
 ignored or extended to provide mock functionality, as you'd like.
 
+## Building Go Bindings
+
+The EOS SDK supports Go language bindings through SWIG (Simplified Wrapper and Interface Generator).
+
+### Prerequisites
+
+- SWIG 3.0 or later
+- Go 1.11 or later
+- GCC/G++ compiler
+- The EOS SDK library (libeos.so)
+
+### Generating Go Bindings
+
+To generate Go bindings, use the `--go` flag with the build script:
+
+```bash
+# For 64-bit bindings (default)
+./build.sh --go
+
+# For 32-bit bindings
+./build.sh -m32 --go
+```
+
+This will:
+1. Generate Go wrapper code using SWIG
+2. Apply necessary patches for CGO linking
+3. Create the Go package in `go/src/eossdk/`
+
+### Using the Go Bindings
+
+After generating the bindings, you can use them in your Go code:
+
+```go
+import "eossdk"
+
+func main() {
+    sdk := eossdk.NewSdk()
+    agentMgr := sdk.Get_agent_mgr()
+    // Use the SDK...
+}
+```
+
+To build your Go application:
+
+```bash
+# Set environment variables
+export GOPATH=/path/to/EosSdk/go
+export CGO_CFLAGS="-I/path/to/EosSdk"
+export CGO_LDFLAGS="-L/path/to/EosSdk/.libs -leos"
+
+# For 32-bit builds, also set:
+export GOARCH=386
+
+# Build your application
+go build your_app.go
+```
+
+### Running Go Applications
+
+When running your Go application, ensure the EOS SDK library is in your library path:
+
+```bash
+export LD_LIBRARY_PATH=/path/to/EosSdk/.libs:$LD_LIBRARY_PATH
+./your_app
+```
+
+### Example
+
+See `examples/MacTableIter.go` for a complete example of using the Go bindings.
+
 
