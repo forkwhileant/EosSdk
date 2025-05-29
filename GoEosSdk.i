@@ -102,6 +102,14 @@ typedef uint64_t uint64_be_t;
 %feature("nodirector") eos::vrf_mgr;
 %feature("nodirector") eos::xcvr_mgr;
 
+// Go-specific: Disable directors for handlers with final methods
+%feature("nodirector") eos::nexthop_group_handler_v2;
+%feature("nodirector") eos::nexthop_group_handler_v3;
+
+// Go-specific: Disable directors for action classes that cause compilation issues
+%feature("nodirector") eos::policy_map_action_t;
+%feature("nodirector") eos::traffic_policy_action_t;
+
 %{
 //#include "eos/acl.h"
 #include "eos/agent.h"
@@ -211,6 +219,24 @@ using namespace eos;
 //%ignore panic;
 %ignore vpanic;
 %include "Includes.i"
+
+// Go-specific fixes for compilation issues
+
+// Ignore specific problematic methods with override final
+%ignore eos::nexthop_group_handler_v2::on_nexthop_group_programmed(std::string const & nexthop_group_name);
+%ignore eos::nexthop_group_handler_v3::on_nexthop_group_programmed(std::string const & nexthop_group_name);
+
+// Workaround for constructor and move semantics issues
+// SWIG has problems with move constructors and rvalue references in Go
+%ignore eos::policy_map_action_t::policy_map_action_t(policy_map_action_t &&);
+%ignore eos::traffic_policy_action_t::traffic_policy_action_t(traffic_policy_action_t &&);
+%ignore eos::policy_map_action_t::operator=(policy_map_action_t &&);
+%ignore eos::traffic_policy_action_t::operator=(traffic_policy_action_t &&);
+
+// Additional ignores for problematic methods that might cause SWIG assertion failures
+%ignore operator<<;  // Ignore all stream operators
+%ignore operator>>;  // Ignore all stream operators
+
 %include "eos/types/policy_map.h"
 
 //%extend eos::error {
